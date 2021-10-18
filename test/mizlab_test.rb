@@ -8,12 +8,20 @@ class MizlabTest < Minitest::Test
     refute_nil ::Mizlab::VERSION
   end
 
+  def test_local_pattern
+    p Mizlab.local_patterns([0, 3], [0, 3])
+  end
+
+  def test_convert
+    p Mizlab.send(:convert, [true] * 9)
+  end
+
   def test_bresenham
     # The simple case.
     assert_equal Mizlab.bresenham(0, 0, 3, 3), [[0, 0], [1, 1], [2, 2], [3, 3]]
 
     # It is OK start < end also.
-    assert_equal Mizlab.bresenhan(0, 0, 3, 3).to_set Mizlab.bresenham(3, 3, 0, 0).to_set
+    assert Mizlab.bresenham(0, 0, 3, 3).to_set == Mizlab.bresenham(3, 3, 0, 0).to_set
 
     # If arguments have float value(s), the function must raise error.
     1.upto(4) do |n|
