@@ -45,6 +45,17 @@ class MizlabTest < Minitest::Test
     end
   end
 
+  def test_get_centers
+    expecteds = Set.new([[0, 2], [1, 2], [2, 2],
+                         [0, 1], [1, 1], [2, 1],
+                         [0, 0], [1, 0], [2, 0]])
+    actuals = Set.new()
+    Mizlab.send(:get_centers, [1, 1]) do |c|
+      actuals.add(c)
+    end
+    assert expecteds == actuals
+  end
+
   def test_convert
     0.upto(511) do |i| # Does not consider number over 511
       org = i

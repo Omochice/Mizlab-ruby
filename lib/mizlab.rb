@@ -33,14 +33,28 @@ module Mizlab
         raise TypeError, "The argument must be Set"
       end
 
-      filleds.each do |center|
-        binaries = []
-        -1.upto(1) do |dy|
-          1.downto(-1) do |dx|
-            binaries.append(filleds.include?([center[0] + dx, center[1] + dy]))
+      centers = Set.new()
+      filleds.each do |focused|
+        get_centers(focused) do |center|
+          if centers.include?(center)
+            next
           end
+          centers.add(center)
+          binaries = []
+          -1.upto(1) do |dy|
+            1.downto(-1) do |dx|
+              binaries.append(filleds.include?([center[0] + dx, center[1] + dy]))
+            end
+          end
+          yield binaries
         end
-        yield binaries
+      end
+    end
+    def get_centers(focused)
+      -1.upto(1) do |dy|
+        1.downto(-1) do |dx|
+          yield [focused[0] + dx, focused[1] + dy]
+        end
       end
     end
 
