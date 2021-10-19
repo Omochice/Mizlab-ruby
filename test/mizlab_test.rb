@@ -20,6 +20,14 @@ class MizlabTest < Minitest::Test
     assert_equal 512, Mizlab.local_patterns(x_coo, y_coo).length
   end
 
+  def test_get_patterns
+    # The argument must be Set
+    assert_raises(TypeError, "The argument must be Set") do
+    fields = [[0,0]]
+    Mizlab.send(:get_patterns, fields)
+    end
+  end
+
   def test_convert
     p Mizlab.send(:convert, [true] * 9)
   end
