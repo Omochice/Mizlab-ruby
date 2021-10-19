@@ -4,8 +4,6 @@ require_relative "mizlab/version"
 require "set"
 
 module Mizlab
-  class Error < StandardError; end
-
   class << self
     def local_patterns(x_coordinates, y_coordinates)
       length = x_coordinates.length
