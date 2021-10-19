@@ -11,7 +11,7 @@ class MizlabTest < Minitest::Test
   def test_local_pattern
     # This function can accept coordinates as Integer.
     x_coo = [0, 2, 0, 2, 0, 2]
-    y_coo = [0, 0, 1, 1 ,2, 2]
+    y_coo = [0, 0, 1, 1, 2, 2]
     assert_equal 512, Mizlab.local_patterns(x_coo, y_coo).length
 
     # Float is OK too.
@@ -23,8 +23,25 @@ class MizlabTest < Minitest::Test
   def test_get_patterns
     # The argument must be Set
     assert_raises(TypeError, "The argument must be Set") do
-    fields = [[0,0]]
-    Mizlab.send(:get_patterns, fields)
+      filleds = [[0, 0]]
+      Mizlab.send(:get_patterns, filleds)
+    end
+
+    # simple case
+    filleds = Set.new([[2, 0], [2, 1], [2, 2],
+                       [1, 0], [1, 1], [1, 2],
+                       [0, 0], [0, 1], [0, 2]])
+    actual = [0] * 512
+    Mizlab.send(:get_patterns, filleds) do |pat|
+      actual[Mizlab.send(:convert, pat)] += 1
+    end
+    expecteds = [1, 3, 7, 6, 4,
+                 9, 27, 63, 54, 36,
+                 73, 219, 511, 438, 292,
+                 72, 216, 504, 432, 288,
+                 64, 192, 448, 384, 256]
+    expecteds.each do |idx|
+      assert_equal 1, actual[idx]
     end
   end
 
