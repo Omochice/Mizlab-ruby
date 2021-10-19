@@ -49,10 +49,10 @@ class MizlabTest < Minitest::Test
 
   def test_bresenham
     # The simple case.
-    assert_equal Mizlab.bresenham(0, 0, 3, 3), [[0, 0], [1, 1], [2, 2], [3, 3]]
+    assert_equal [[0, 0], [1, 1], [2, 2], [3, 3]], Mizlab.send(:bresenham, 0, 0, 3, 3)
 
     # It is OK start < end also.
-    assert Mizlab.bresenham(0, 0, 3, 3).to_set == Mizlab.bresenham(3, 3, 0, 0).to_set
+    assert Mizlab.send(:bresenham, 0, 0, 3, 3).to_set == Mizlab.send(:bresenham, 3, 3, 0, 0).to_set
 
     # If arguments have float value(s), the function must raise error.
     1.upto(4) do |n|
@@ -62,7 +62,7 @@ class MizlabTest < Minitest::Test
           args[idx] = args[idx].to_f
         end
         assert_raises(TypeError, "All of arguments must be Integer") do
-          Mizlab.bresenham(*args)
+          Mizlab.send(:bresenham, *args)
         end
       end
     end
