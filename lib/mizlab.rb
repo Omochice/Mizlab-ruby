@@ -5,6 +5,10 @@ require "set"
 
 module Mizlab
   class << self
+    # Compute local patterns from coordinates.
+    # @param  [Array] x_coordinates coordinates on x.
+    # @param  [Array] y_coordinates coordinates on y.
+    # @return [Array] Local pattern histgram (unnormalized).
     def local_patterns(x_coordinates, y_coordinates)
       length = x_coordinates.length
       if length != y_coordinates.length
@@ -26,6 +30,9 @@ module Mizlab
 
     private
 
+    # get patterns from filled pixs.
+    # @param [Set] filleds filled pix's coordinates
+    # @yield [binaries] Array like [t, f, t...]
     def get_patterns(filleds)
       unless filleds.is_a?(Set)
         raise TypeError, "The argument must be Set"
@@ -48,6 +55,10 @@ module Mizlab
         end
       end
     end
+
+    # get center coordinates of all window that include focused pixel
+    # @param  [Array] focused coordinate of focused pixel
+    # @yield [Array] center coordinates of all window
     def get_centers(focused)
       -1.upto(1) do |dy|
         1.downto(-1) do |dx|
@@ -56,6 +67,9 @@ module Mizlab
       end
     end
 
+    # Convert binary array to interger
+    # @param  [Array] binaries Array of binaries
+    # @return [Integer] converted integer
     def convert(binaries)
       unless binaries.all? { |v| v.is_a?(TrueClass) || v.is_a?(FalseClass) }
         raise TypeError, "The argument must be Boolean"
@@ -69,6 +83,12 @@ module Mizlab
       return rst
     end
 
+    # Compute fill pixels by bresenham algorithm
+    # @param  [Interger] x0 the start point on x.
+    # @param  [Interger] y0 the start point on y.
+    # @param  [Interger] x1 the end point on x.
+    # @param  [Interger] x1 the end point on y.
+    # @return [Array] filled pixels
     def bresenham(x0, y0, x1, y1)
       if !x0.is_a?(Integer) || !y0.is_a?(Integer) || !x1.is_a?(Integer) || !y1.is_a?(Integer)
         raise TypeError, "All of arguments must be Integer"
