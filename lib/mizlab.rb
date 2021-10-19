@@ -90,7 +90,7 @@ module Mizlab
     # @param  [Interger] x1 the end point on y.
     # @return [Array] filled pixels
     def bresenham(x0, y0, x1, y1)
-      if !x0.is_a?(Integer) || !y0.is_a?(Integer) || !x1.is_a?(Integer) || !y1.is_a?(Integer)
+      if ![x0, y0, x1, y1].all? { |v| v.is_a?(Integer) }
         raise TypeError, "All of arguments must be Integer"
       end
       dx = (x1 - x0).abs
