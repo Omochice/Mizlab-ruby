@@ -18,7 +18,7 @@ jobs:
       run: |
         gem install bundler -v 2.2.15
         bundle install
-        bundle exec rake yardoc
+        bundle exec rake yard
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: ${{ github.ref == 'refs/heads/main' }}
