@@ -29,7 +29,22 @@ class MizlabTest < Minitest::Test
   end
 
   def test_convert
-    p Mizlab.send(:convert, [true] * 9)
+    0.upto(511) do |i| # Does not consider number over 511
+      org = i
+      # make bit array
+      r = []
+      while i.nonzero?
+        r.append(!(i % 2).zero?)
+        i /= 2
+      end
+      assert_equal org, Mizlab.send(:convert, r.reverse)
+    end
+
+    # If array has non Boolean, the function should raise error.
+    assert_raises(TypeError, "The argument must be Boolean") do
+      arr = [true, true, 1]
+      Mizlab.send(:convert, arr)
+    end
   end
 
   def test_bresenham
