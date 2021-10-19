@@ -9,7 +9,15 @@ class MizlabTest < Minitest::Test
   end
 
   def test_local_pattern
-    p Mizlab.local_patterns([0, 3], [0, 3])
+    # This function can accept coordinates as Integer.
+    x_coo = [0, 2, 0, 2, 0, 2]
+    y_coo = [0, 0, 1, 1 ,2, 2]
+    assert_equal 512, Mizlab.local_patterns(x_coo, y_coo).length
+
+    # Float is OK too.
+    x_coo = [0.5, 2.4]
+    y_coo = [0.5, 2.4]
+    assert_equal 512, Mizlab.local_patterns(x_coo, y_coo).length
   end
 
   def test_convert
