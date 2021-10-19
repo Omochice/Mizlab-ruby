@@ -14,20 +14,22 @@ module Mizlab
       end
 
       filled_pixs = Set.new
-      0.upto(length - 1, true) do |idx|
+      0.upto(length - 2) do |idx|
         filled_pixs += bresenham(x_coordinates[idx].truncate, y_coordinates[idx].truncate,
                                  x_coordinates[idx + 1].truncate, y_coordinates[idx + 1].truncate)
       end
 
       local_pattern_list = [0] * 512
-      get_patterns(filled_pixs) do |p|
-        local_pattern_list[p] += 1
+      get_patterns(filled_pixs) do |pix|
+        local_pattern_list[convert(pix)] += 1
       end
       return local_pattern_list
     end
 
+    private
+
     def get_patterns(filleds)
-      if filleds.is_a?(Set)
+      unless filleds.is_a?(Set)
         raise TypeError, "The argument must be Set"
       end
 
@@ -38,17 +40,21 @@ module Mizlab
             binaries.append(filleds.include?([center[0] + dx, center[1] + dy]))
           end
         end
-        yield binary
+        yield binaries
       end
     end
 
     def convert(binaries)
+      unless binaries.all? { |v| v.is_a?(TrueClass) || v.is_a?(FalseClass) }
+        raise TypeError, "The argument must be Boolean"
+      end
       rst = 0
-      binaries.each_with_index do |b, i|
+      binaries.reverse.each_with_index do |b, i|
         if b
           rst += 2 ** i
         end
       end
+      return rst
     end
 
     def bresenham(x0, y0, x1, y1)
