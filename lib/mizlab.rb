@@ -2,9 +2,32 @@
 
 require_relative "mizlab/version"
 require "set"
+require "bio"
 
 module Mizlab
   class << self
+    # Fetch data via genbank
+    # @param  [String] accession Accession number Like "NC_012920"
+    # @param  [Bool] is_protein wheather the accession is protein. Default to true.
+    # @return [Bio::GenBank] GenBank object
+    def getobj(accession, is_protein = false)
+      ret = is_protein ? fetch_protein(accession) : fetch_nucleotide(accession)
+      parse(ret) do |o|
+        return o
+      end
+    end
+
+    # Fetch multiple data via genbank
+    # @param  [Array] accessions Array of accession string
+    # @param  [Bool] is_protein wheather the accession is protein. Default to true.
+    # @yield  [Bio::GenBank] GenBank object
+    def getobjs(accessions, is_protein = false)
+      ret = is_protein ? fetch_protein(accessions) : fetch_nucleotide(accessions)
+      parse(ret) do |o|
+        yield o
+      end
+    end
+
     # Compute local patterns from coordinates.
     # @param  [Array] x_coordinates coordinates on x.
     # @param  [Array] y_coordinates coordinates on y.
@@ -29,6 +52,14 @@ module Mizlab
     end
 
     private
+
+    def fetch_protein(accession)
+      return Bio::NCBI::REST::EFetch.protein(accession)
+    end
+
+    def fetch_nucleotide(accession)
+      return Bio::NCBI::REST::EFetch.protein(accession)
+    end
 
     # get patterns from filled pixs.
     # @param [Set] filleds filled pix's coordinates
@@ -115,6 +146,20 @@ module Mizlab
         end
       end
       return lines
+    end
+
+    # Parse fetched data.
+    # @param  [String] entries Entries as string
+    # @yield  [Object] Object that match entry format.
+    def parse(entries)
+      tmp_file_name = ".mizlab_fetch_tmpfile"
+      File.open(tmp_file_name, "w") do |f|
+        f.puts entries
+      end
+      Bio::FlatFile.auto(tmp_file_name).each_entry do |e|
+        yield e
+      end
+      File.delete(tmp_file_name)
     end
   end
 end
