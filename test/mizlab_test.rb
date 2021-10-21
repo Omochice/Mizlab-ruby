@@ -95,4 +95,33 @@ class MizlabTest < Minitest::Test
       end
     end
   end
+
+  # def test_get # FIXME it is too defficult for me to write test for this method
+  #     # p = MiniTest::Mock.ne
+  #     # p.expect(:call, "hi", [])
+  #     mock = ->_ { Bio::GenBank.new("") }
+  #     mock_yield = ->t { t.times {} }
+  #     Mizlab.stub(:parse, mock) do
+  #       # If give an argument, return a value
+  #       Mizlab.stub(:fetch_nucleotide, "") do
+  #         # Because of stub, arg is meanless
+  #         # assert_equal(Bio::GenBank.new(""), Mizlab.getobj("NC_012920")) # this would be failed
+  #         assert(Mizlab.getobj("NC_012920").is_a?(Bio::GenBank))
+  #       end
+  #     end
+  #     # p e.entry_id
+  #     Mizlab.stub(:parse, mock_yield) do
+  #       Mizlab.stub(:fetch_nucleotide, mock_yield[3]) do
+  #         # If give 2 or than arguments, need block
+  #         # assert_raises(LocalJumpError) do
+  #         #    p Mizlab.getobj("NC_012920")
+  #         # end
+  #         Mizlab.getobj([nil] * 3) do |actual|
+  #           # assert_equal(Bio::GenBank.new(""), actual) # This would be failed
+  #           p actual
+  #           assert(actual.is_a?(Bio::GenBank))
+  #         end
+  #       end
+  #     end
+  #   end
 end
