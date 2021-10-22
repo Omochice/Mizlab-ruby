@@ -5,19 +5,19 @@ require_relative "lib/mizlab/version"
 Gem::Specification.new do |spec|
   spec.name          = "mizlab"
   spec.version       = Mizlab::VERSION
-  spec.authors       = ["mochi-MizLab"]
+  spec.authors       = ["Omochice"]
   spec.email         = ["mochice.mls.ntl@gmail.com"]
 
   spec.summary       = "The tools for our laboratory"
   spec.description   = "The tools for our laboratory"
-  spec.homepage      = "https://github.com/MizLab/Mizlab-ruby"
+  spec.homepage      = "https://mizlab.github.io/Mizlab-ruby"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.4.0")
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = spec.homepage
+  spec.metadata["source_code_uri"] = "https://github.com/MizLab/Mizlab-ruby"
   # spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   # Specify which files should be added to the gem when it is released.

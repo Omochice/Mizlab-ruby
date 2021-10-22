@@ -1,16 +1,20 @@
-# Mizlab
+[![Test](https://github.com/MizLab/Mizlab-ruby/actions/workflows/minitest.yml/badge.svg)](https://github.com/MizLab/Mizlab-ruby/actions/workflows/minitest.yml)
+[![Build page](https://github.com/MizLab/Mizlab-ruby/actions/workflows/yardoc.yml/badge.svg)](https://github.com/MizLab/Mizlab-ruby/actions/workflows/yardoc.yml)
 
-# **THIS IS UNDER DEVELOPMENT!!**
+# Mizlab-ruby
 
-**The below is template by `bundle gem mizlab`. So the text below is not always correct.**
+This gem is for easy handling of the processes used in our labolatory.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/mizlab`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Install it yourself as:
+
+```sh
+gem install mizlab
+```
+
+or add below to your application's Gemfile:
 
 ```ruby
 gem 'mizlab'
@@ -18,15 +22,13 @@ gem 'mizlab'
 
 And then execute:
 
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install mizlab
+```sh
+bundle install
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+See [document](https://mizlab.github.io/Mizlab-ruby).
 
 ## Development
 
@@ -40,4 +42,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/[USERN
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+T -->he gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
