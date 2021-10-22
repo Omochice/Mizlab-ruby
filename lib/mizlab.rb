@@ -106,7 +106,7 @@ module Mizlab
     end
 
     def fetch_nucleotide(accession)
-      return Bio::NCBI::REST::EFetch.protein(accession)
+      return Bio::NCBI::REST::EFetch.nucleotide(accession)
     end
 
     # get patterns from filled pixs.
