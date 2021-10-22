@@ -28,6 +28,50 @@ module Mizlab
       end
     end
 
+    # Calculate coordinates from sequence
+    # @param  [Bio::Sequence] sequence sequence
+    # @param  [Hash] mappings Hash formated {String => [Float...]}. All of [Float...] must be have same dimention.
+    # @param  [Hash] weights Weights for some base combination.
+    # @param  [Integer] Size of window when scanning sequence. If not give this, will use `mappings.keys[0].length -1`.
+    # @return [Array] coordinates like [[dim1...], [dim2...]...].
+    def calculate_coordinates(sequence, mappings,
+                              weights = nil, window_size = nil)
+      # error detections
+      if weights.is_a?(Hash) && window_size.nil?
+        keys = weights.keys
+        expect_window_size = keys[0].length
+        if keys.any? { |k| k.length != expect_window_size }
+          raise TypeError, "When not give `window_size`, `weights` must have same length keys"
+        end
+      end
+      n_dimention = mappings.values[0].length
+      if mappings.values.any? { |v| v.length != n_dimention }
+        raise TypeError, "All of `mappings`.values must have same size"
+      end
+
+      window_size = (if window_size.nil?
+        unless weights.nil?
+          weights.keys[0].length
+        else
+          3 # default
+        end
+      else
+        window_size
+      end)
+      window_size -= 1
+      weights = weights.nil? ? {} : weights
+      weights.default = 1.0
+      coordinates = Array.new(n_dimention) { [0.0] }
+      sequence.length.times do |idx|
+        start = idx < window_size ? 0 : idx - window_size
+        vector = mappings[sequence[idx]].map { |v| v * weights[sequence[start..idx]] }
+        vector.each_with_index do |v, j|
+          coordinates[j].append(coordinates[j][-1] + v)
+        end
+      end
+      return coordinates
+    end
+
     # Compute local patterns from coordinates.
     # @param  [Array] x_coordinates coordinates on x.
     # @param  [Array] y_coordinates coordinates on y.

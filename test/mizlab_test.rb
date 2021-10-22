@@ -124,4 +124,37 @@ class MizlabTest < Minitest::Test
   #       end
   #     end
   #   end
+
+  def test_calculate_coordinates
+    # minimal use
+    seq = Bio::Sequence.auto("ATGC")
+    mappings = { "a" => [1, 1], "t" => [-1, 1], "g" => [-1, -1], "c" => [1, -1] }
+    assert_equal([[0.0, 1.0, 0.0, -1.0, 0.0], [0.0, 1.0, 2.0, 1.0, 0.0]],
+                 Mizlab.calculate_coordinates(seq, mappings))
+
+    # function should be able to use weigths
+    # weights = { "a" => 0.5, "t" => 0.5, "g" => 0.5, "c" => 0.5 }
+    weights = {}
+    "atgc".split("").permutation(3) do |comb|
+      weights[comb.join("")] = 0.5
+    end
+    assert_equal([[0.0, 1.0, 0.0, -0.5, 0.0], [0.0, 1.0, 2.0, 1.5, 1.0]],
+                 Mizlab.calculate_coordinates(seq, mappings, weights = weights))
+
+    # If mapping have different size array, must raise error
+    assert_raises(TypeError, "All of `mappings`.values must have same size") do
+      invalid_mappings = mappings.dup
+      invalid_mappings["b"] = [1, 1, 1]
+      Mizlab.calculate_coordinates(seq, invalid_mappings)
+    end
+    # If specify weights that have different length key, you need to give window_size
+    weights_have_diff_len_key = weights.dup
+    weights_have_diff_len_key["a"] = 2.0
+    assert_raises(TypeError, "When not give `window_size`, `weights` must have same length keys") do
+      Mizlab.calculate_coordinates(seq, mappings, weights = weights_have_diff_len_key)
+    end
+    assert_equal([[0.0, 2.0, 1.0, 0.5, 1.0], [0.0, 2.0, 3.0, 2.5, 2.0]],
+                 Mizlab.calculate_coordinates(seq, mappings,
+                                              weights = weights_have_diff_len_key, window_size = 3))
+  end
 end
