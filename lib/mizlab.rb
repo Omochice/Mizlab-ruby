@@ -7,9 +7,9 @@ require "bio"
 module Mizlab
   class << self
     # Fetch data via genbank
-    # @param  [String] accession Accession number Like "NC_012920"
+    # @param  [String] accession Accession number Like "NC_012920".
     # @param  [Bool] is_protein wheather the accession is protein. Default to true.
-    # @return [Bio::GenBank] GenBank object
+    # @return [Bio::GenBank] GenBank object.
     def getobj(accession, is_protein = false)
       ret = is_protein ? fetch_protein(accession) : fetch_nucleotide(accession)
       parse(ret) do |o|
@@ -18,9 +18,9 @@ module Mizlab
     end
 
     # Fetch multiple data via genbank
-    # @param  [Array] accessions Array of accession string
+    # @param  [Array] accessions Array of accession string.
     # @param  [Bool] is_protein wheather the accession is protein. Default to true.
-    # @yield  [Bio::GenBank] GenBank object
+    # @yield  [Bio::GenBank] GenBank object.
     def getobjs(accessions, is_protein = false)
       ret = is_protein ? fetch_protein(accessions) : fetch_nucleotide(accessions)
       parse(ret) do |o|
@@ -106,8 +106,8 @@ module Mizlab
     end
 
     # get patterns from filled pixs.
-    # @param [Set] filleds filled pix's coordinates
-    # @yield [binaries] Array like [t, f, t...]
+    # @param [Set] filleds filled pix's coordinates.
+    # @yield [binaries] Array like [t, f, t...].
     def get_patterns(filleds)
       unless filleds.is_a?(Set)
         raise TypeError, "The argument must be Set"
