@@ -3,6 +3,7 @@
 require_relative "mizlab/version"
 require "set"
 require "bio"
+require "stringio"
 
 module Mizlab
   class << self
@@ -200,14 +201,9 @@ module Mizlab
     # @param  [String] entries Entries as string
     # @yield  [Object] Object that match entry format.
     def parse(entries)
-      tmp_file_name = ".mizlab_fetch_tmpfile"
-      File.open(tmp_file_name, "w") do |f|
-        f.puts entries
-      end
-      Bio::FlatFile.auto(tmp_file_name).each_entry do |e|
+      Bio::FlatFile.auto(StringIO.new(entries)).each_entry do |e|
         yield e
       end
-      File.delete(tmp_file_name)
     end
   end
 end
