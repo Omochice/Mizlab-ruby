@@ -49,6 +49,10 @@ module Mizlab
         raise TypeError, "All of `mappings`.values must have same size"
       end
 
+      mappings.each do |k, v|
+        mappings[k] = v.map(&:to_f)
+      end
+
       window_size = (if window_size.nil?
         unless weights.nil?
           weights.keys[0].length
