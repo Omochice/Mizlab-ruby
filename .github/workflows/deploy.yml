@@ -1,0 +1,21 @@
+name: Publish-gem
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Publish gem
+        uses: dawidd6/action-publish-gem@v1
+        with:
+          # Optional, will publish to RubyGems if specified
+          api_key: ${{secrets.RUBYGEMS_API_KEY}}
+          # Optional, will publish to GitHub Packages if specified
+          github_token: ${{secrets.GITHUB_TOKEN}}
