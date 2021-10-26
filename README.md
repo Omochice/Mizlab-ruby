@@ -1,5 +1,6 @@
 [![Test](https://github.com/MizLab/Mizlab-ruby/actions/workflows/minitest.yml/badge.svg)](https://github.com/MizLab/Mizlab-ruby/actions/workflows/minitest.yml)
 [![Build page](https://github.com/MizLab/Mizlab-ruby/actions/workflows/yardoc.yml/badge.svg)](https://github.com/MizLab/Mizlab-ruby/actions/workflows/yardoc.yml)
+[![Gem Version](https://badge.fury.io/rb/mizlab.svg)](https://badge.fury.io/rb/mizlab)
 
 # Mizlab-ruby
 
