@@ -7,22 +7,37 @@ require "stringio"
 
 module Mizlab
   class << self
+    # Get entry as String. You can also give a block.
+    # @param  [String/Array] accessions Accession numbers like ["NC_012920", ...].
+    # @return [String] Entry as string.
+    # @yield  [String] Entry as string.
+    def getent(accessions, is_protein = false)
+      accessions = accessions.is_a?(String) ? [accessions] : accessions
+      accessions.each do |acc|
+        ret = is_protein ? fetch_protein(acc) : fetch_nucleotide(acc)
+        if block_given?
+          yield ret
+        else
+          return ret
+        end
+        sleep(0.37) # Using 0.333... seconds, sometimes hit the NCBI rate limit
+      end
+    end
+
     # Fetch data via genbank. You can also give a block.
     # @param  [String/Array] accessions Accession numbers Like ["NC_012920", ...].
     # @param  [Bool] is_protein wheather the accession is protein. Default to true.
     # @return [Bio::GenBank] GenBank object.
+    # @yield  [Bio::GenBank] GenBank object.
     def getobj(accessions, is_protein = false)
-      accessions = accessions.is_a?(String) ? [accessions] : accessions
-      accessions.each do |acc|
-        ret = is_protein ? fetch_protein(acc) : fetch_nucleotide(acc)
-        parse(ret) do |o|
+      getent(accessions, is_protein) do |entry|
+        parse(entry) do |o|
           if block_given?
             yield o
           else
             return o
           end
         end
-        sleep(0.37) # Using 0.333... seconds, sometimes hit the NCBI rate limit
       end
     end
 
