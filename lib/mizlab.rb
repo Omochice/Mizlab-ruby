@@ -7,25 +7,18 @@ require "stringio"
 
 module Mizlab
   class << self
-    # Fetch data via genbank
-    # @param  [String] accession Accession number Like "NC_012920".
+    # Fetch data via genbank. You can also give a block.
+    # @param  [String/Array] accessions Accession numbers Like ["NC_012920", ...].
     # @param  [Bool] is_protein wheather the accession is protein. Default to true.
     # @return [Bio::GenBank] GenBank object.
-    def getobj(accession, is_protein = false)
-      ret = is_protein ? fetch_protein(accession) : fetch_nucleotide(accession)
-      parse(ret) do |o|
-        return o
-      end
-    end
-
-    # Fetch multiple data via genbank
-    # @param  [Array] accessions Array of accession string.
-    # @param  [Bool] is_protein wheather the accession is protein. Default to true.
-    # @yield  [Bio::GenBank] GenBank object.
-    def getobjs(accessions, is_protein = false)
+    def getobj(accessions, is_protein = false)
       ret = is_protein ? fetch_protein(accessions) : fetch_nucleotide(accessions)
       parse(ret) do |o|
-        yield o
+        if block_given?
+          yield o
+        else
+          return o
+        end
       end
     end
 
