@@ -25,11 +25,14 @@ task :versionup do
   ver, minor_ver, hotfix = version.split(".")
   hotfix = hotfix.to_i + 1
   new_version = "#{ver}.#{minor_ver}.#{hotfix}"
-  cmd = "sed -E 's/[0-9]+\\.[0-9]+\\.[0-9]+/#{new_version}/' ./lib/mizlab/version.rb"
-    puts cmd
-    system(cmd)
+  cmd = "sed -E -i 's/[0-9]+\\.[0-9]+\\.[0-9]+/#{new_version}/' ./lib/mizlab/version.rb"
+  puts(cmd)
+  system(cmd)
+  cmd = "git add ./lib/mizlab/version.rb && git commit -m ':rocket: Version up'"
+  puts(cmd)
+  system(cmd)
   cmd = "git tag v#{new_version}"
-  puts cmd
+  puts(cmd)
   system(cmd)
 end
 
