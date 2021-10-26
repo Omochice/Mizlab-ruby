@@ -4,8 +4,7 @@
 
 # Mizlab-ruby
 
-This gem is for easy handling of the processes used in our labolatory.
-
+This gem is for easy handling of the processes used in our laboratory.
 
 ## Installation
 
@@ -15,7 +14,7 @@ Install it yourself as:
 gem install mizlab
 ```
 
-or add below to your application's Gemfile:
+Or add below to your application's Gemfile:
 
 ```ruby
 gem 'mizlab'
@@ -39,7 +38,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/mizlab.
+Bug reports and pull requests are welcome on GitHub at https://github.com/MizLab/Mizlab-ruby
 
 ## License
 
