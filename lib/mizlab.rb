@@ -12,13 +12,17 @@ module Mizlab
     # @param  [Bool] is_protein wheather the accession is protein. Default to true.
     # @return [Bio::GenBank] GenBank object.
     def getobj(accessions, is_protein = false)
-      ret = is_protein ? fetch_protein(accessions) : fetch_nucleotide(accessions)
-      parse(ret) do |o|
-        if block_given?
-          yield o
-        else
-          return o
+      accessions = accessions.is_a?(String) ? [accessions] : accessions
+      accessions.each do |acc|
+        ret = is_protein ? fetch_protein(acc) : fetch_nucleotide(acc)
+        parse(ret) do |o|
+          if block_given?
+            yield o
+          else
+            return o
+          end
         end
+        sleep(0.37) # Using 0.333... seconds, sometimes hit the NCBI rate limit
       end
     end
 
