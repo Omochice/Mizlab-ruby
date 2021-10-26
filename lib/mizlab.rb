@@ -41,6 +41,32 @@ module Mizlab
       end
     end
 
+    # Save object.
+    # @param  [String] filename Filepath from executed source.
+    # @param  [Bio::DB] obj Object which inherits from `Bio::DB`.
+    # @return [nil]
+    def savefile(filename, obj)
+      if File.exists?(filename)
+        yes = Set.new(["N", "n", "no"])
+        no = Set.new(["Y", "y", "yes"])
+        loop do
+          print("#{filename} exists already. Overwrite? [y/n] ")
+          inputed = gets.rstrip
+          if yes.include?(inputed)
+            return
+          elsif no.include?(inputed)
+            break
+          end
+          puts("You should input 'y' or 'n'")
+        end
+      end
+      File.open(filename, "w") do |f|
+        obj.tags.each do |t|
+          f.puts(obj.get(t))
+        end
+      end
+    end
+
     # Calculate coordinates from sequence
     # @param  [Bio::Sequence] sequence sequence
     # @param  [Hash] mappings Hash formated {String => [Float...]}. All of [Float...] must be have same dimention.
