@@ -16,4 +16,21 @@ YARD::Rake::YardocTask.new do |t|
   t.stats_options = ["--list-undoc"]
 end
 
+desc "Version up"
+task :versionup do
+  version = ""
+  File.open("./lib/mizlab/version.rb") do |f|
+    version = f.read[(/(\d+\.\d+\.\d+)/)]
+  end
+  ver, minor_ver, hotfix = version.split(".")
+  hotfix = hotfix.to_i + 1
+  new_version = "#{ver}.#{minor_ver}.#{hotfix}"
+  cmd = "sed -E 's/[0-9]+\\.[0-9]+\\.[0-9]+/#{new_version}/' ./lib/mizlab/version.rb"
+    puts cmd
+    system(cmd)
+  cmd = "git tag v#{new_version}"
+  puts cmd
+  system(cmd)
+end
+
 task default: :test
