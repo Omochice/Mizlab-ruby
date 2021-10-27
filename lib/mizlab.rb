@@ -139,6 +139,23 @@ module Mizlab
       return local_pattern_list
     end
 
+    # Fetch Taxonomy information from Taxonomy ID. can be give block too.
+    # @param  [String/Integer] taxonid Taxonomy ID, or Array of its.
+    # @return [Hash] Taxonomy informations.
+    # @yield  [Hash] Taxonomy informations.
+    def fetch_taxon(taxonid)
+      taxonid = taxonid.is_a?(Array) ? taxonid : [taxonid]
+      taxonid.each do |id|
+        obj = Bio::NCBI::REST::EFetch.taxonomy(id, "xml")
+        hashed = xml_to_hash(REXML::Document.new(obj).root)
+        if block_given?
+          yield hashed[:TaxaSet][:Taxon][:LineageEx][:Taxon]
+        else
+          return hashed[:TaxaSet][:Taxon][:LineageEx][:Taxon]
+        end
+      end
+    end
+
     private
 
     def fetch_protein(accession)
