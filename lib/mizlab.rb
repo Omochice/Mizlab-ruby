@@ -4,6 +4,7 @@ require_relative "mizlab/version"
 require "set"
 require "bio"
 require "stringio"
+require "rexml/document"
 
 module Mizlab
   class << self
@@ -242,6 +243,22 @@ module Mizlab
       Bio::FlatFile.auto(StringIO.new(entries)).each_entry do |e|
         yield e
       end
+    end
+
+    # Convert XML to Hash.
+    # @param  [REXML::Document] element XML object.
+    # @return [Hash] Hash that converted from xml.
+    def xml_to_hash(element)
+      value = (if element.has_elements?
+        children = {}
+        element.each_element do |e|
+          children.merge!(xml_to_hash(e)) { |k, v1, v2| v1.is_a?(Array) ? v1 << v2 : [v1, v2] }
+        end
+        children
+      else
+        element.text
+      end)
+      return { element.name.to_sym => value }
     end
   end
 end
