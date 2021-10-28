@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
 
   # Dependency
   spec.add_dependency "bio", "~> 2.0.0"
+  spec.add_dependency "rexml", ">= 0"
 
   # Dependency (for development)
   spec.add_development_dependency "rake", "~> 13.0"

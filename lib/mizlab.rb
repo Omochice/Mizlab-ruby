@@ -4,6 +4,7 @@ require_relative "mizlab/version"
 require "set"
 require "bio"
 require "stringio"
+require "rexml/document"
 
 module Mizlab
   class << self
@@ -138,6 +139,23 @@ module Mizlab
       return local_pattern_list
     end
 
+    # Fetch Taxonomy information from Taxonomy ID. can be give block too.
+    # @param  [String/Integer] taxonid Taxonomy ID, or Array of its.
+    # @return [Hash] Taxonomy informations.
+    # @yield  [Hash] Taxonomy informations.
+    def fetch_taxon(taxonid)
+      taxonid = taxonid.is_a?(Array) ? taxonid : [taxonid]
+      taxonid.each do |id|
+        obj = Bio::NCBI::REST::EFetch.taxonomy(id, "xml")
+        hashed = xml_to_hash(REXML::Document.new(obj).root)
+        if block_given?
+          yield hashed[:TaxaSet][:Taxon][:LineageEx][:Taxon]
+        else
+          return hashed[:TaxaSet][:Taxon][:LineageEx][:Taxon]
+        end
+      end
+    end
+
     private
 
     def fetch_protein(accession)
@@ -242,6 +260,22 @@ module Mizlab
       Bio::FlatFile.auto(StringIO.new(entries)).each_entry do |e|
         yield e
       end
+    end
+
+    # Convert XML to Hash.
+    # @param  [REXML::Document] element XML object.
+    # @return [Hash] Hash that converted from xml.
+    def xml_to_hash(element)
+      value = (if element.has_elements?
+        children = {}
+        element.each_element do |e|
+          children.merge!(xml_to_hash(e)) { |k, v1, v2| v1.is_a?(Array) ? v1 << v2 : [v1, v2] }
+        end
+        children
+      else
+        element.text
+      end)
+      return { element.name.to_sym => value }
     end
   end
 end
