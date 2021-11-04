@@ -203,20 +203,8 @@ module Mizlab
       end
     end
 
-    # Convert binary array to interger
-    # @param  [Array] binaries Array of binaries
-    # @return [Integer] converted integer
-    def convert(binaries)
-      unless binaries.all? { |v| v.is_a?(TrueClass) || v.is_a?(FalseClass) }
-        raise TypeError, "The argument must be Boolean"
-      end
-      rst = 0
-      binaries.reverse.each_with_index do |b, i|
-        if b
-          rst += 2 ** i
         end
       end
-      return rst
     end
 
     # Compute fill pixels by bresenham algorithm
