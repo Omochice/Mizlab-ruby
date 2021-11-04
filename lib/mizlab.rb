@@ -196,7 +196,7 @@ module Mizlab
               binary += filleds.include?("#{x + dx}##{y + dy}") ? "1" : "0"
             end
           end
-          yield binaries.to_i(2)
+          yield binary.to_i(2)
         end
       end
     end
