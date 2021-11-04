@@ -225,29 +225,41 @@ module Mizlab
     # @param  [Interger] x1 the end point on x.
     # @param  [Interger] x1 the end point on y.
     # @return [Array] filled pixels
+    # ref https://aidiary.hatenablog.com/entry/20050402/1251514618 (japanese)
     def bresenham(x0, y0, x1, y1)
       if ![x0, y0, x1, y1].all? { |v| v.is_a?(Integer) }
         raise TypeError, "All of arguments must be Integer"
       end
-      dx = (x1 - x0).abs
-      dy = (y1 - y0).abs
-      sx = x0 < x1 ? 1 : -1
-      sy = y0 < y1 ? 1 : -1
-      err = dx - dy
-      lines = []
-      while true
-        lines.append([x0, y0])
-        if (x0 == x1 && y0 == y1)
-          break
+
+      dx = x1 - x0
+      dy = y1 - y0
+      step_x = dx.positive? ? 1 : -1
+      step_y = dy.positive? ? 1 : -1
+      dx, dy = [dx, dy].map { |x| (x * 2).abs }
+
+      lines = [[x0, y0]]
+
+      if dx > dy
+        fraction = dy - dx / 2
+        while x0 != x1
+          if fraction >= 0
+            y0 += step_y
+            fraction -= dx
+          end
+          x0 += step_x
+          fraction += dy
+          lines << [x0, y0]
         end
-        e2 = 2 * err
-        if e2 > -dy
-          err = err - dy
-          x0 = x0 + sx
-        end
-        if e2 < dx
-          err = err + dx
-          y0 = y0 + sy
+      else
+        fraction = dx - dy / 2
+        while y0 != y1
+          if fraction >= 0
+            x0 += step_x
+            fraction -= dx
+          end
+          y0 += step_y
+          fraction += dx
+          lines << [x0, y0]
         end
       end
       return lines
