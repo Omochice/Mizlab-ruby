@@ -28,12 +28,12 @@ class MizlabTest < Minitest::Test
     end
 
     # simple case
-    filleds = Set.new([[2, 0], [2, 1], [2, 2],
-                       [1, 0], [1, 1], [1, 2],
-                       [0, 0], [0, 1], [0, 2]])
+    filleds = Set.new(["2#0", "2#1", "2#2",
+                       "1#0", "1#1", "1#2",
+                       "0#0", "0#1", "0#2"])
     actual = [0] * 512
     Mizlab.send(:get_patterns, filleds) do |pat|
-      actual[Mizlab.send(:convert, pat)] += 1
+      actual[pat] += 1
     end
     expecteds = [1, 3, 7, 6, 4,
                  9, 27, 63, 54, 36,
@@ -46,11 +46,11 @@ class MizlabTest < Minitest::Test
   end
 
   def test_get_centers
-    expecteds = Set.new([[0, 2], [1, 2], [2, 2],
-                         [0, 1], [1, 1], [2, 1],
-                         [0, 0], [1, 0], [2, 0]])
+    expecteds = Set.new(["2#0", "2#1", "2#2",
+                       "1#0", "1#1", "1#2",
+                       "0#0", "0#1", "0#2"])
     actuals = Set.new()
-    Mizlab.send(:get_centers, [1, 1]) do |c|
+    Mizlab.send(:get_centers, 1, 1) do |c|
       actuals.add(c)
     end
     assert expecteds == actuals
