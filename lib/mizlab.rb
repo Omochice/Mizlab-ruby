@@ -72,7 +72,7 @@ module Mizlab
     # @param  [Bio::Sequence] sequence sequence
     # @param  [Hash] mappings Hash formated {String => [Float...]}. All of [Float...] must be have same dimention.
     # @param  [Hash] weights Weights for some base combination.
-    # @param  [Integer] Size of window when scanning sequence. If not give this, will use `mappings.keys[0].length -1`.
+    # @param  [Integer] window_size Size of window when scanning sequence. If not give this, will use `mappings.keys[0].length -1`.
     # @return [Array] coordinates like [[dim1...], [dim2...]...].
     def calculate_coordinates(sequence, mappings,
                               weights = nil, window_size = nil)
@@ -117,8 +117,8 @@ module Mizlab
     end
 
     # Compute local patterns from coordinates.
-    # @param  [Array] x_coordinates coordinates on x.
-    # @param  [Array] y_coordinates coordinates on y.
+    # @param  [Array] x_coordinates Coordinates on x dimention.
+    # @param  [Array] y_coordinates Coordinates on y dimention.
     # @return [Array] Local pattern histgram (unnormalized).
     def local_patterns(x_coordinates, y_coordinates)
       length = x_coordinates.length
@@ -127,14 +127,21 @@ module Mizlab
       end
 
       filled_pixs = Set.new
-      0.upto(length - 2) do |idx|
-        filled_pixs += bresenham(x_coordinates[idx].truncate, y_coordinates[idx].truncate,
-                                 x_coordinates[idx + 1].truncate, y_coordinates[idx + 1].truncate)
+      x_coordinates[...-1].zip(y_coordinates[...-1],
+                               x_coordinates[1...],
+                               y_coordinates[1...]) do |x_start, y_start, x_end, y_end|
+        bresenham(x_start.truncate, y_start.truncate,
+                  x_end.truncate, y_end.truncate).each do |pix|
+          filled_pixs.add("#{pix[0]}##{pix[1]}")
+          # NOTE:
+          # In set or hash, if including array make it so slow.
+          # Prevend it by converting array into symbol or freezed string.
+        end
       end
 
       local_pattern_list = [0] * 512
-      get_patterns(filled_pixs) do |pix|
-        local_pattern_list[convert(pix)] += 1
+      get_patterns(filled_pixs) do |pattern|
+        local_pattern_list[pattern] += 1
       end
       return local_pattern_list
     end
@@ -167,56 +174,43 @@ module Mizlab
     end
 
     # get patterns from filled pixs.
-    # @param [Set] filleds filled pix's coordinates.
-    # @yield [binaries] Array like [t, f, t...].
+    # @param [Set] filleds Filled pix's coordinates.
+    # @yield [Integer] Pattern that shown as binary
     def get_patterns(filleds)
       unless filleds.is_a?(Set)
         raise TypeError, "The argument must be Set"
       end
 
-      centers = Set.new()
+      centers = Set.new
       filleds.each do |focused|
-        get_centers(focused) do |center|
+        x, y = focused.split("#").map(&:to_i)
+        get_centers(x, y) do |center|
           if centers.include?(center)
             next
           end
           centers.add(center)
-          binaries = []
+          binary = ""
+          x, y = center.split("#").map(&:to_i)
           -1.upto(1) do |dy|
             1.downto(-1) do |dx|
-              binaries.append(filleds.include?([center[0] + dx, center[1] + dy]))
+              binary += filleds.include?("#{x + dx}##{y + dy}") ? "1" : "0"
             end
           end
-          yield binaries
+          yield binary.to_i(2)
         end
       end
     end
 
     # get center coordinates of all window that include focused pixel
-    # @param  [Array] focused coordinate of focused pixel
-    # @yield [Array] center coordinates of all window
-    def get_centers(focused)
+    # @param [Integer] focused_x Coordinate of focused pixel on x dimention
+    # @param [Integer] focused_y Coordinate of focused pixel on y dimention
+    # @yield [String] Center coordinates of all window as string
+    def get_centers(focused_x, focused_y)
       -1.upto(1) do |dy|
         1.downto(-1) do |dx|
-          yield [focused[0] + dx, focused[1] + dy]
+          yield "#{focused_x + dx}##{focused_y + dy}"
         end
       end
-    end
-
-    # Convert binary array to interger
-    # @param  [Array] binaries Array of binaries
-    # @return [Integer] converted integer
-    def convert(binaries)
-      unless binaries.all? { |v| v.is_a?(TrueClass) || v.is_a?(FalseClass) }
-        raise TypeError, "The argument must be Boolean"
-      end
-      rst = 0
-      binaries.reverse.each_with_index do |b, i|
-        if b
-          rst += 2 ** i
-        end
-      end
-      return rst
     end
 
     # Compute fill pixels by bresenham algorithm
@@ -224,7 +218,7 @@ module Mizlab
     # @param  [Interger] y0 the start point on y.
     # @param  [Interger] x1 the end point on x.
     # @param  [Interger] x1 the end point on y.
-    # @return [Array] filled pixels
+    # @return [Array] Filled pixels
     # ref https://aidiary.hatenablog.com/entry/20050402/1251514618 (japanese)
     def bresenham(x0, y0, x1, y1)
       if ![x0, y0, x1, y1].all? { |v| v.is_a?(Integer) }
