@@ -85,6 +85,16 @@
   
 </div>
 
+<h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Mizlab/Blast.html" title="Mizlab::Blast (class)">Blast</a></span>
+    
+  
+</p>
 
   
     <h2>
@@ -97,7 +107,7 @@
         <dt id="VERSION-constant" class="">VERSION =
           
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>0.1.5</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>0.1.6</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
     </dl>
   
@@ -135,6 +145,30 @@
   
     <span class="summary_desc"><div class='inline'>
 <p>Calculate coordinates from sequence.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fetch_taxon-class_method" title="fetch_taxon (class method)">.<strong>fetch_taxon</strong>(taxonid) {|Hash| ... } &#x21d2; Hash </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Fetch Taxonomy information from Taxonomy ID.</p>
 </div></span>
   
 </li>
@@ -318,16 +352,18 @@
   
     <li>
       
-        <span class='name'>Size</span>
+        <span class='name'>window_size</span>
       
       
         <span class='type'>(<tt>Integer</tt>)</span>
       
       
+        <em class="default">(defaults to: <tt>nil</tt>)</em>
+      
       
         &mdash;
         <div class='inline'>
-<p>of window when scanning sequence. If not give this, will use `<a href="0">mappings.keys</a>.length -1`.</p>
+<p>Size of window when scanning sequence. If not give this, will use `<a href="0">mappings.keys</a>.length -1`.</p>
 </div>
       
     </li>
@@ -359,8 +395,6 @@
       <pre class="lines">
 
 
-76
-77
 78
 79
 80
@@ -399,10 +433,12 @@
 113
 114
 115
-116</pre>
+116
+117
+118</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 76</span>
+      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 78</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_calculate_coordinates'>calculate_coordinates</span><span class='lparen'>(</span><span class='id identifier rubyid_sequence'>sequence</span><span class='comma'>,</span> <span class='id identifier rubyid_mappings'>mappings</span><span class='comma'>,</span>
                           <span class='id identifier rubyid_weights'>weights</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_window_size'>window_size</span> <span class='op'>=</span> <span class='kw'>nil</span><span class='rparen'>)</span>
@@ -444,6 +480,121 @@
     <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_coordinates'>coordinates</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="fetch_taxon-class_method">
+  
+    .<strong>fetch_taxon</strong>(taxonid) {|Hash| ... } &#x21d2; <tt>Hash</tt> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Fetch Taxonomy information from Taxonomy ID. can be give block too.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>taxonid</span>
+      
+      
+        <span class='type'>(<tt>String/Integer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Taxonomy ID, or Array of its.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Taxonomy informations.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Taxonomy informations.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 154</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_fetch_taxon'>fetch_taxon</span><span class='lparen'>(</span><span class='id identifier rubyid_taxonid'>taxonid</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_taxonid'>taxonid</span> <span class='op'>=</span> <span class='id identifier rubyid_taxonid'>taxonid</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>Array</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='id identifier rubyid_taxonid'>taxonid</span> <span class='op'>:</span> <span class='lbracket'>[</span><span class='id identifier rubyid_taxonid'>taxonid</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_taxonid'>taxonid</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_id'>id</span><span class='op'>|</span>
+    <span class='id identifier rubyid_obj'>obj</span> <span class='op'>=</span> <span class='const'>Bio</span><span class='op'>::</span><span class='const'>NCBI</span><span class='op'>::</span><span class='const'>REST</span><span class='op'>::</span><span class='const'>EFetch</span><span class='period'>.</span><span class='id identifier rubyid_taxonomy'>taxonomy</span><span class='lparen'>(</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>xml</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_hashed'>hashed</span> <span class='op'>=</span> <span class='id identifier rubyid_xml_to_hash'>xml_to_hash</span><span class='lparen'>(</span><span class='const'>REXML</span><span class='op'>::</span><span class='const'>Document</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_root'><span class='object_link'><a href="top-level-namespace.html" title="Top Level Namespace (root)">root</a></span></span><span class='rparen'>)</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_block_given?'>block_given?</span>
+      <span class='kw'>yield</span> <span class='id identifier rubyid_hashed'>hashed</span><span class='lbracket'>[</span><span class='symbol'>:TaxaSet</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:Taxon</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:LineageEx</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:Taxon</span><span class='rbracket'>]</span>
+    <span class='kw'>else</span>
+      <span class='kw'>return</span> <span class='id identifier rubyid_hashed'>hashed</span><span class='lbracket'>[</span><span class='symbol'>:TaxaSet</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:Taxon</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:LineageEx</span><span class='rbracket'>]</span><span class='lbracket'>[</span><span class='symbol'>:Taxon</span><span class='rbracket'>]</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -532,8 +683,6 @@
       <pre class="lines">
 
 
-14
-15
 16
 17
 18
@@ -543,10 +692,12 @@
 22
 23
 24
-25</pre>
+25
+26
+27</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_getent'>getent</span><span class='lparen'>(</span><span class='id identifier rubyid_accessions'>accessions</span><span class='comma'>,</span> <span class='id identifier rubyid_is_protein'>is_protein</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_accessions'>accessions</span> <span class='op'>=</span> <span class='id identifier rubyid_accessions'>accessions</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span><span class='lparen'>(</span><span class='const'>String</span><span class='rparen'>)</span> <span class='op'>?</span> <span class='lbracket'>[</span><span class='id identifier rubyid_accessions'>accessions</span><span class='rbracket'>]</span> <span class='op'>:</span> <span class='id identifier rubyid_accessions'>accessions</span>
@@ -665,8 +816,6 @@
       <pre class="lines">
 
 
-32
-33
 34
 35
 36
@@ -675,10 +824,12 @@
 39
 40
 41
-42</pre>
+42
+43
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 32</span>
+      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_getobj'>getobj</span><span class='lparen'>(</span><span class='id identifier rubyid_accessions'>accessions</span><span class='comma'>,</span> <span class='id identifier rubyid_is_protein'>is_protein</span> <span class='op'>=</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_getent'>getent</span><span class='lparen'>(</span><span class='id identifier rubyid_accessions'>accessions</span><span class='comma'>,</span> <span class='id identifier rubyid_is_protein'>is_protein</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_entry'>entry</span><span class='op'>|</span>
@@ -728,7 +879,7 @@
       
         &mdash;
         <div class='inline'>
-<p>coordinates on x.</p>
+<p>Coordinates on x dimention.</p>
 </div>
       
     </li>
@@ -744,7 +895,7 @@
       
         &mdash;
         <div class='inline'>
-<p>coordinates on y.</p>
+<p>Coordinates on y dimention.</p>
 </div>
       
     </li>
@@ -776,8 +927,6 @@
       <pre class="lines">
 
 
-122
-123
 124
 125
 126
@@ -793,10 +942,19 @@
 136
 137
 138
-139</pre>
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 122</span>
+      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 124</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_local_patterns'>local_patterns</span><span class='lparen'>(</span><span class='id identifier rubyid_x_coordinates'>x_coordinates</span><span class='comma'>,</span> <span class='id identifier rubyid_y_coordinates'>y_coordinates</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_length'>length</span> <span class='op'>=</span> <span class='id identifier rubyid_x_coordinates'>x_coordinates</span><span class='period'>.</span><span class='id identifier rubyid_length'>length</span>
@@ -805,14 +963,21 @@
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_filled_pixs'>filled_pixs</span> <span class='op'>=</span> <span class='const'>Set</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span>
-  <span class='int'>0</span><span class='period'>.</span><span class='id identifier rubyid_upto'>upto</span><span class='lparen'>(</span><span class='id identifier rubyid_length'>length</span> <span class='op'>-</span> <span class='int'>2</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_idx'>idx</span><span class='op'>|</span>
-    <span class='id identifier rubyid_filled_pixs'>filled_pixs</span> <span class='op'>+=</span> <span class='id identifier rubyid_bresenham'>bresenham</span><span class='lparen'>(</span><span class='id identifier rubyid_x_coordinates'>x_coordinates</span><span class='lbracket'>[</span><span class='id identifier rubyid_idx'>idx</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='comma'>,</span> <span class='id identifier rubyid_y_coordinates'>y_coordinates</span><span class='lbracket'>[</span><span class='id identifier rubyid_idx'>idx</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='comma'>,</span>
-                             <span class='id identifier rubyid_x_coordinates'>x_coordinates</span><span class='lbracket'>[</span><span class='id identifier rubyid_idx'>idx</span> <span class='op'>+</span> <span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='comma'>,</span> <span class='id identifier rubyid_y_coordinates'>y_coordinates</span><span class='lbracket'>[</span><span class='id identifier rubyid_idx'>idx</span> <span class='op'>+</span> <span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_x_coordinates'>x_coordinates</span><span class='lbracket'>[</span><span class='op'>...</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_zip'>zip</span><span class='lparen'>(</span><span class='id identifier rubyid_y_coordinates'>y_coordinates</span><span class='lbracket'>[</span><span class='op'>...</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='comma'>,</span>
+                           <span class='id identifier rubyid_x_coordinates'>x_coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>...</span><span class='rbracket'>]</span><span class='comma'>,</span>
+                           <span class='id identifier rubyid_y_coordinates'>y_coordinates</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>...</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_x_start'>x_start</span><span class='comma'>,</span> <span class='id identifier rubyid_y_start'>y_start</span><span class='comma'>,</span> <span class='id identifier rubyid_x_end'>x_end</span><span class='comma'>,</span> <span class='id identifier rubyid_y_end'>y_end</span><span class='op'>|</span>
+    <span class='id identifier rubyid_bresenham'>bresenham</span><span class='lparen'>(</span><span class='id identifier rubyid_x_start'>x_start</span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='comma'>,</span> <span class='id identifier rubyid_y_start'>y_start</span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='comma'>,</span>
+              <span class='id identifier rubyid_x_end'>x_end</span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='comma'>,</span> <span class='id identifier rubyid_y_end'>y_end</span><span class='period'>.</span><span class='id identifier rubyid_truncate'>truncate</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pix'>pix</span><span class='op'>|</span>
+      <span class='id identifier rubyid_filled_pixs'>filled_pixs</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pix'>pix</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_content'>#</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_pix'>pix</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+      <span class='comment'># NOTE:
+</span>      <span class='comment'># In set or hash, if including array make it so slow.
+</span>      <span class='comment'># Prevend it by converting array into symbol or freezed string.
+</span>    <span class='kw'>end</span>
   <span class='kw'>end</span>
 
   <span class='id identifier rubyid_local_pattern_list'>local_pattern_list</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span> <span class='op'>*</span> <span class='int'>512</span>
-  <span class='id identifier rubyid_get_patterns'>get_patterns</span><span class='lparen'>(</span><span class='id identifier rubyid_filled_pixs'>filled_pixs</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pix'>pix</span><span class='op'>|</span>
-    <span class='id identifier rubyid_local_pattern_list'>local_pattern_list</span><span class='lbracket'>[</span><span class='id identifier rubyid_convert'>convert</span><span class='lparen'>(</span><span class='id identifier rubyid_pix'>pix</span><span class='rparen'>)</span><span class='rbracket'>]</span> <span class='op'>+=</span> <span class='int'>1</span>
+  <span class='id identifier rubyid_get_patterns'>get_patterns</span><span class='lparen'>(</span><span class='id identifier rubyid_filled_pixs'>filled_pixs</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_pattern'>pattern</span><span class='op'>|</span>
+    <span class='id identifier rubyid_local_pattern_list'>local_pattern_list</span><span class='lbracket'>[</span><span class='id identifier rubyid_pattern'>pattern</span><span class='rbracket'>]</span> <span class='op'>+=</span> <span class='int'>1</span>
   <span class='kw'>end</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_local_pattern_list'>local_pattern_list</span>
 <span class='kw'>end</span></pre>
@@ -896,8 +1061,6 @@
       <pre class="lines">
 
 
-48
-49
 50
 51
 52
@@ -916,10 +1079,12 @@
 65
 66
 67
-68</pre>
+68
+69
+70</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 48</span>
+      <pre class="code"><span class="info file"># File 'lib/mizlab.rb', line 50</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_savefile'>savefile</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='comma'>,</span> <span class='id identifier rubyid_obj'>obj</span><span class='rparen'>)</span>
   <span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_exists?'>exists?</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
@@ -952,7 +1117,7 @@
 </div>
 
       <div id="footer">
-  Generated on Tue Oct 26 14:03:41 2021 by
+  Generated on Mon Nov 15 16:28:05 2021 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.26 (ruby-3.0.1).
 </div>
