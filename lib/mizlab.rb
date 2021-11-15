@@ -4,6 +4,7 @@ require_relative "mizlab/version"
 require "set"
 require "bio"
 require "stringio"
+require "open3"
 require "rexml/document"
 
 module Mizlab
@@ -282,6 +283,56 @@ module Mizlab
         element.text
       end)
       return { element.name.to_sym => value }
+    end
+  end
+
+  class Blast < Bio::Blast
+    # Execute blast+
+    # @param  [Bio::Sequence, Bio::Sequence::NA, Bio::Sequence::AA] q Query sequence
+    # @param  [Hash] opts commandline arguments optionaly
+    # @return [Bio::Blast::Report] Result for blast+
+    def query(q, opts = {})
+      # NOTE: I dont use **kwargs for compatibility
+      case q
+      when Bio::Sequence
+        q = q.output(:fasta)
+      when Bio::Sequence::NA, Bio::Sequence::AA, Bio::Sequence::Generic
+        q = q.to_fasta("query", 70)
+      else
+        q = q.to_s
+      end
+      stdout, _ = exec_local(q, opts)
+      return parse_result(stdout)
+    end
+
+    private
+
+    # Execute blast on local
+    # @param  [string] query_string Query string, fasta etc
+    # @param  [Hash] opts commandline arguments optionaly
+    # @return [Array] Array [stdout, stderr] as string
+    # TODO: compatibility with original
+    def exec_local(query_string, opts = {})
+      # NOTE: I dont use **kwargs for compatibility
+      cmd = []
+      cmd << @program if @program
+      cmd += ["-db", @db] if @program
+      cmd += ["-outfmt", "5"]
+      opts.each do |kv|
+        cmd += kv.map(&:to_s)
+      end
+      return execute_command(cmd, stdin: query_string)
+    end
+
+    # Execute command on shell
+    # @param  [Array] cmd Array of command strings that splited by white space
+    # @param  [String] stdin String of stdin
+    # @return [Array] String of stdout and stderr
+    # @raise  [IOError] Command finished without status 0
+    def execute_command(cmd, stdin)
+      stdout, stderr, status = Open3.capture3(cmd.join(" "), stdin_data: stdin)
+      raise IOError, stderr unless status == 0
+      return [stdout, stderr]
     end
   end
 end
